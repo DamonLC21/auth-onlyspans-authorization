@@ -12,6 +12,30 @@ class App extends Component {
     error: ""
   }
 
+  componentDidMount(){
+   this.validateUser()
+  }
+
+  validateUser = () => {
+    let token = localStorage.getItem('token')
+    if(token){
+      fetch(baseUrl + "profile", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.id){
+          this.setState({
+            user: result
+          })
+        }
+      })
+    }
+  }
+
   signUp = user => {
     fetch(baseUrl + "users", {
       method: "POST",
@@ -29,7 +53,7 @@ class App extends Component {
       })
     })
     .then(response => response.json())
-    .then(user => this.setState({ user }) )
+    .then(user => this.setState({ user }))
   }
 
   login = (username, password) => {
